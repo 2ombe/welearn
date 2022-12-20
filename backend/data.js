@@ -17,7 +17,7 @@ const data = {
     },
     {
       izina: "Nike slim pants",
-      slug: "nike-slim-pants",
+      slug: "6",
       category: "pants",
       image: "/images/p2.jpg",
       price: 120,
@@ -30,7 +30,7 @@ const data = {
     },
     {
       izina: "adidas slim shirt",
-      pslug: "adidas-slim-shirt",
+      slug: "adidas-slim-shirt",
       category: "T-shirts",
       image: "/images/p3.jpg",
       price: 120,
@@ -44,7 +44,7 @@ const data = {
     {
       //_id: "4",
       izina: "adidas slim pant",
-      slug: "adida-slim-shirt",
+      slug: "3",
       category: "T-shirts",
       image: "/images/p4.jpg",
       price: 120,
