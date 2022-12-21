@@ -1,42 +1,63 @@
-import React from "react";
-
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import axios from "axios";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import logger from "use-reducer-logger";
+import Product from "../components/Product";
+import { Helmet } from "react-helmet-async";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "FETCH_REQUEST":
+      return { ...state, loading: true };
+    case "FETCH_SUCCESS":
+      return { ...state, products: action.payload, loading: false };
+    case "FETCH_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
 
 export default function HomeScreen() {
-  const [products, setProducts] = useState([]);
+  const [{ loading, error, products }, dispatch] = useReducer(logger(reducer), {
+    loading: true,
+    error: "",
+    products: [],
+  });
 
   useEffect(() => {
+    dispatch({ type: "FETCH_REQUEST" });
     const fetchData = async () => {
-      const result = await axios.get("/api/products");
-      console.log(result.data);
-      setProducts(result.data);
+      try {
+        const result = await axios.get("/api/products");
+        dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+      } catch (error) {
+        dispatch({ type: "FETCH_FAIL", payload: error.message });
+      }
     };
     fetchData();
   }, []);
   return (
     <div>
+      <Helmet>PRACTICE</Helmet>
       <h1>products</h1>
       <div className="products">
-        {products.map((product) => (
-          <div className="product" key={product.slug}>
-            <Link to={`/product/${product.slug}`}>
-              <img src={product.image} alt={product.price} />
-            </Link>
-            <div className="product-ifo">
-              <Link to={`/product/${product.slug}`}>
-                <p>{product.izina}</p>
-              </Link>
-              <p>
-                {" "}
-                <strong>{product.price}Rwf</strong>{" "}
-              </p>
-              <button>Add</button>
-            </div>
-          </div>
-        ))}
+        {loading ? (
+          <LoadingBox />
+        ) : error ? (
+          <MessageBox variant="danger">{error}</MessageBox>
+        ) : (
+          <Row>
+            {products.map((product) => (
+              <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
+                <Product product={product} />
+              </Col>
+            ))}
+          </Row>
+        )}
       </div>
     </div>
   );
