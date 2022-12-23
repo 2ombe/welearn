@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 import mongoose from "mongoose";
 import seedRouter from "./routes/seedRouter.js";
 import productRouter from "./routes/productRouter.js";
@@ -29,6 +30,12 @@ app.use("/api/seed", seedRouter);
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
+
+const __direname = path.resolve();
+app.use(express.static(path.join(__direname, "/titi/build")));
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__direname, "/titi/build/index.html"))
+);
 
 app.use((req, res, next, err) => {
   res.status(500).send({ message: err.message });

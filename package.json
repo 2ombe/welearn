@@ -1,0 +1,12 @@
+{
+  "name": "welearn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/2ombe/welearn.git",
+  "author": "Tuombe <jtuombe@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "cd backend && yarn install && ../titi && yarn install && yarn run build",
+    "start": "node backend/server.js"
+  }
+}
