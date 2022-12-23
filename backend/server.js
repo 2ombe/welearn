@@ -1,28 +1,37 @@
 import express from "express";
-import data from "./data.js";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import seedRouter from "./routes/seedRouter.js";
+import productRouter from "./routes/productRouter.js";
+import userRouter from "./routes/userRoutes.js";
+import orderRouter from "./routes/orderRoute.js";
+dotenv.config();
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/products", (req, res) => {
-  res.send(data.products);
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("connected db");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+app.get("/api/keys/paypal", (req, res) => {
+  res.send(process.env.PAYPAL_CLIEVT_ID || "sd");
 });
 
-app.get("/api/products/slug/:slug", (req, res) => {
-  const product = data.products.find((x) => x.slug === req.params.slug);
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(404).send({ message: "Product not found" });
-  }
-});
-app.get("/api/products/:_id", (req, res) => {
-  const product = data.products.find((x) => x._id === req.params._id);
+app.use("/api/seed", seedRouter);
 
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(404).send({ message: "Product not found" });
-  }
+app.use("/api/products", productRouter);
+app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
+
+app.use((req, res, next, err) => {
+  res.status(500).send({ message: err.message });
 });
 
 const port = process.env.PORT || 8000;
