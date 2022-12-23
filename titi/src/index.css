@@ -43,10 +43,34 @@ main {
   max-width: 600px;
 }
 .checkot-steps > div {
-  border-button: 0.2rem solid #a0a0a0;
+  border-buttom: 0.2rem solid #a0a0a0;
   color: #a0a0a0;
 }
 .checkot-steps > div.active {
   border-bottom: 0.2rem solid #f08000;
   color: #f08000;
+}
+/*sidebar*/
+.navbar-brand {
+  font-weight: bold;
+}
+.sidebar-nav {
+  width: 240px;
+  height: 100%;
+  position: absolute;
+  left: -300px;
+  background-color: #100900;
+  transition: 0.5s;
+}
+.site-container {
+  transition: 0.4s;
+}
+.active-cont {
+  margin-left: 240px;
+}
+.active-nav {
+  left: 0;
+}
+.text-bold {
+  font-weight: bold;
 }
